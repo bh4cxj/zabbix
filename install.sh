@@ -29,4 +29,5 @@ EOF
 service zabbix-server start
 
 sed -i 's/# php_value date.timezone Europe\/Riga/php_value date.timezone Asia\/Shanghai/' /etc/httpd/conf.d/zabbix.conf
+sed -i 's/Listen 80/Listen 9000/' /etc/httpd/conf/httpd.conf
 systemctl start httpd
