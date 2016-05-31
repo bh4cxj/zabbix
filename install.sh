@@ -4,12 +4,18 @@ rpm -ivh http://repo.zabbix.com/zabbix/3.0/rhel/7/x86_64/zabbix-release-3.0-1.el
 yum install -y zabbix-server-mysql zabbix-web-mysql zabbix-agent
 
 cd /usr/share/doc/zabbix-server-mysql-`zabbix_server -V | head -1 | cut -d" " -f3`
+cat > tmp.sh << EOF
+zcat create.sql.gz | mysql -uroot zabbix -p
+EOF
+chmod +x tmp.sh
+
 expect << EOF
-spawn zcat create.sql.gz | mysql -uroot zabbix -p
+spawn ./tmp.sh
 expect "password: "
 send "zabbix"
 expect eof
 EOF
+rm -f .tmp.sh
 
 mv /etc/zabbix/zabbix_server.conf /etc/zabbix/zabbix_server.conf.bak
 cat > /etc/zabbix/zabbix_server.conf << EOF
